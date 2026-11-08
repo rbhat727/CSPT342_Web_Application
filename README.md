@@ -1,4 +1,4 @@
-# Gallery Notebook
+# Art Institute Gallery Notebook
 
 ## Team
 
@@ -6,7 +6,7 @@
 **Members:** Daniel R., Yvonne Flores-Garcia, Riddik Bhat
 
 ## Application
-Art Institute Gallery Explorer
+Art Institute Gallery Notebook
 
 ## Application Description
 
