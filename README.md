@@ -1,4 +1,4 @@
-# Art Institute Gallery Notebook
+# The Chicago Art Institute Gallery Notebook
 
 ## Team
 
