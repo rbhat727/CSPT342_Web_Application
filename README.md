@@ -26,6 +26,7 @@ Art Institute Gallery Explorer
 
 ## Tools and Software
 | Category | Tool |
+| --- | --- |
 | Editor | Visual Studio Code |
 | Version control | Git and GitHub |
 | Runtime | Node.js |
