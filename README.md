@@ -3,10 +3,11 @@
 ## Team
 
 **Team name:** Chicago Art Scribers
+
 **Members:** Daniel R., Yvonne Flores-Garcia, Riddik Bhat
 
 ## Application
-Art Institute Gallery Notebook
+The Chicago Art Institute Gallery Notebook
 
 ## Application Description
 
