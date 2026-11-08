@@ -1,4 +1,4 @@
-# The Chicago Art Institute Gallery Notebook
+# The Art Institute of Chicago Gallery Notebook
 
 ## Team
 
@@ -7,7 +7,7 @@
 **Members:** Daniel R., Yvonne Flores-Garcia, Riddik Bhat
 
 ## Application
-The Chicago Art Institute Gallery Notebook
+The Art Institute of Chicago Gallery Notebook
 
 ## Application Description
 
