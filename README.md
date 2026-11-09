@@ -11,7 +11,7 @@ The Art Institute of Chicago Gallery Notebook
 
 ## Application Description
 
-Ever leave a museum full of wonderful thoughts, only to struggle to remember them later? The Art Institute of Chicago Gallery Notebook app helps you capture what catches your eye and what you think about it—right there in the gallery.
+Ever leave a museum full of wonderful thoughts, only to struggle to remember them later? The Art Institute of Chicago Gallery Notebook app helps you capture what catches your eye and what you think about it — right there in the gallery.
 
 Start on the Home page, where you’ll find a featured artwork. From there, head to Search to find a specific piece in the Art Institute of Chicago’s collection, or visit the Explore by Style page. Select an artwork to open its Artwork Detail page, where you can view a large image and learn about the artist, date, medium, and credit line. As you explore, save the work to My Notebook with a note while your impressions are fresh. When you’re back home, open My Notebook to revisit the works you saved and the notes you made in the gallery. It’s an easy way to hold on to the details, impressions, and ideas you gathered during your museum visit.
 
