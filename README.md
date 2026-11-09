@@ -12,9 +12,10 @@ The Art Institute of Chicago Gallery Notebook
 ## Application Description
 Ever leave a museum full of wonderful thoughts, only to struggle to remember them later? The Art Institute of Chicago Gallery Notebook app helps you capture what catches your eye and what you think about it—right there in the gallery.
 
-Use our Search feature to find artwork in the Art Institute of Chicago’s collection and Explore by Style. browse the results to find a work that interests you. Open the 'Artwork Detail' page to see a large image, along with its artist, date, medium, and credit line. Take a closer look, explore the details, and add your own notes to your notebook while the experience is fresh. When you’re back home, visit 'My Notebook' to see the artworks you explored and revisit your personal notes. It’s an easy way to hold on to the details, impressions, and ideas you gathered during your museum visit.
+Use our Search feature to find artwork in the Art Institute of Chicago’s collection and Explore by Style, then browse the results to find artwork that interests you. Open the 'Artwork Detail' page to see a large image, along with its artist, date, medium, and credit line. Take a closer look, explore the details, and add your own notes while the experience is fresh. When you’re back home, visit 'My Notebook' to see the artworks you explored and revisit your personal notes. It’s an easy way to hold on to the details, impressions, and ideas you gathered during your museum visit.
 
 ## Need and Purpose
+Museum visits can inspire wonderful thoughts, but it’s easy to forget them later. The Gallery Notebook helps visitors discover artwork in the Art Institute of Chicago’s collection by keyword or style, view artwork details, and save personal notes as they explore. Their saved works and notes remain in My Notebook between visits, where they can be revisited, edited, or removed. With a clear, accessible design, visitors can use the app with a keyboard or screen reader, as well as a mouse.
 
 ## Target Audience
 Our target audience is museum visitors who want their trips to the Art Institute to be more personal and memorable. We especially have in mind fellow Loyola students in the fine arts and humanities who need to track works for coursework, along with repeat visitors and members who want to keep a running record of what they've seen.
