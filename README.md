@@ -10,14 +10,17 @@
 The Art Institute of Chicago Gallery Notebook
 
 ## Application Description
+
 Ever leave a museum full of wonderful thoughts, only to struggle to remember them later? The Art Institute of Chicago Gallery Notebook app helps you capture what catches your eye and what you think about it—right there in the gallery.
 
 Start on the Home page, where you’ll find a featured artwork. From there, head to Search to find a specific piece in the Art Institute of Chicago’s collection, or visit the Explore by Style page.Select an artwork to open its Artwork Detail page, where you can view a large image and learn about the artist, date, medium, and credit line. As you explore, use Edit Entry to add your own notes while your impressions are fresh. When you’re back home, go to My Notebook to revisit the artworks you explored and your personal notes. It’s an easy way to hold on to the details, impressions, and ideas you gathered during your museum visit.
 
 ## Need and Purpose
-Museum visits can inspire wonderful thoughts, but it’s easy to forget them later. The Gallery Notebook helps visitors discover artwork in the Art Institute of Chicago’s collection by keyword or style, view artwork details, and save personal notes as they explore. Their saved works and notes remain in My Notebook between visits, where they can be revisited, edited, or removed. With a clear, accessible design, visitors can use the app with a keyboard or screen reader, as well as a mouse.
+
+A museum visit can spark ideas, but those thoughts are easy to lose once you leave. The Art Institute’s website lets visitors explore its collection, but offers no way to preserve personal reflections. General note-taking apps, meanwhile, often lack the images and details that make each artwork memorable. The Gallery Notebook brings it all together, helping visitors remember which artworks caught their attention — and why.
 
 ## Target Audience
+
 Our target audience is museum visitors who want their trips to the Art Institute to be more personal and memorable. We especially have in mind fellow Loyola students in the fine arts and humanities who need to track works for coursework, along with repeat visitors and members who want to keep a running record of what they've seen.
 
 ## Pages and User Activities
