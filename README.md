@@ -33,6 +33,7 @@ The Art Institute of Chicago Gallery Notebook
 3. **Clear and accessible presentation.** Show artwork images and information in a layout that works by keyboard and screen reader as well as by mouse, so the collection is open to everyone.
 
 ## Tools and Software
+
 | Category | Tool |
 | --- | --- |
 | Editor | Visual Studio Code |
