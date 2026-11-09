@@ -35,7 +35,7 @@ Our target audience is museum visitors who want their trips to the Art Institute
 
 1. **Fast discovery:** Let visitors find works in the Art Institute's collection in seconds by keyword or by artistic style, without leaving the app.
 2. **An enduring personal resource:** Give each user a notebook of saved works and notes that persists between visits and can be edited or pruned at any time.
-3. **Clear and accessible layout:** Show artwork images and information in a layout that works by keyboard and screen reader as well as by mouse, so the collection is open to everyone.
+3. **Clear and accessible layout:** Show artwork images and information within a dynamic format that works by keyboard and screen reader as well as by mouse, so the collection is open to everyone.
 
 ## Tools and Software
 
