@@ -13,7 +13,7 @@ The Art Institute of Chicago Gallery Notebook
 
 Ever leave a museum full of wonderful thoughts, only to struggle to remember them later? The Art Institute of Chicago Gallery Notebook app helps you capture what catches your eye and what you think about it—right there in the gallery.
 
-Start on the Home page, where you’ll find a featured artwork. From there, head to Search to find a specific piece in the Art Institute of Chicago’s collection, or visit the Explore by Style page.Select an artwork to open its Artwork Detail page, where you can view a large image and learn about the artist, date, medium, and credit line. As you explore, use Edit Entry to add your own notes while your impressions are fresh. When you’re back home, go to My Notebook to revisit the artworks you explored and your personal notes. It’s an easy way to hold on to the details, impressions, and ideas you gathered during your museum visit.
+Start on the Home page, where you’ll find a featured artwork. From there, head to Search to find a specific piece in the Art Institute of Chicago’s collection, or visit the Explore by Style page. Select an artwork to open its Artwork Detail page, where you can view a large image and learn about the artist, date, medium, and credit line. As you explore, use Edit Entry to add your own notes while your impressions are fresh. When you’re back home, go to My Notebook to revisit the artworks you explored and your personal notes. It’s an easy way to hold on to the details, impressions, and ideas you gathered during your museum visit.
 
 ## Need and Purpose
 
@@ -38,7 +38,7 @@ Our target audience is museum visitors who want their trips to the Art Institute
 
 1. **Fast discovery:** Let visitors find works in the Art Institute's collection in seconds by keyword or by artistic style, without leaving the app.
 2. **An enduring personal resource:** Give each user a notebook of saved works and notes that persists between visits and can be edited or pruned at any time.
-3. **Clear and accessible layout:** Show artwork images and information in a layout that works by keyboard and screen reader as well as by mouse, so the collection is open to everyone.
+3. **Clear and accessible layout:** Show artwork images and information within a dynamic format that works by keyboard and screen reader as well as by mouse, so the collection is open to everyone.
 
 ## Tools and Software
 
