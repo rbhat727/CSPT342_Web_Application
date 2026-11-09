@@ -6,7 +6,7 @@
 
 **Members:** Daniel R., Yvonne Flores-Garcia, Riddik Bhat
 
-## Application
+## Application Name
 The Art Institute of Chicago Gallery Notebook
 
 ## Application Description
