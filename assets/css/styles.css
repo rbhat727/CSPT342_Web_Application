@@ -1,0 +1,69 @@
+/* Base styles for the Gallery Notebook. Kept small on purpose;
+   visual design is refined in Assignment 3. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+a {
+  color: #0b4f8a;
+}
+
+a:focus-visible {
+  outline: 3px solid #0b4f8a;
+  outline-offset: 2px;
+}
+
+/* Hidden until a keyboard user tabs to it. */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+.site-header,
+main,
+.site-footer {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.site-header {
+  border-bottom: 1px solid #cccccc;
+}
+
+.site-name {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer {
+  border-top: 1px solid #cccccc;
+  font-size: 0.9rem;
+  color: #444444;
+}
