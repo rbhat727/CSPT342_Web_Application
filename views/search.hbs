@@ -2,7 +2,7 @@
 
 <form class="search-form" action="/search" method="GET" role="search">
   <label for="q">Search by artist, title or subject</label>
-  <input type="search" id="q" name="q" value="{{query}}" required>
+  <input type="search" id="q" name="q" value="{{query}}" maxlength="100" required>
   <button type="submit">Search</button>
 </form>
 

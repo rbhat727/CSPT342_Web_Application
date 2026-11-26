@@ -20,6 +20,11 @@ app.use(express.static(path.join(__dirname, 'assets')));
 
 // View templating engine: Handlebars (hbs). Templates live in the views folder.
 // views/layout.hbs is applied to every page automatically.
+// Team rule: give res.render() named values only, for example
+//   res.render('edit', { note: req.body.note })
+// and never a whole object from the user, such as req.body or req.query.
+// hbs reads its own settings from that same object, so a visitor could
+// otherwise change how a page is built.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
@@ -40,9 +45,12 @@ const API_HEADERS = {
 };
 
 // A search returns very few fields unless we name the ones we want.
-const SEARCH_FIELDS = 'id,title,artist_title,date_display,image_id,thumbnail,is_public_domain';
+const SEARCH_FIELDS = 'id,title,artist_title,date_display,image_id,thumbnail';
 
 const RESULTS_PER_PAGE = 12;
+
+// Longest search we accept. The search box has the same limit.
+const MAX_QUERY_LENGTH = 100;
 
 // Base address for artwork images. Every API response includes the current
 // value, so we update this whenever we hear from the API.
@@ -59,9 +67,16 @@ function buildImageUrl(imageId, width) {
 
 // Turn the database's timestamp ("2026-11-26 09:15:00", in UTC)
 // into a readable date such as "November 26, 2026".
+// The date is given in Chicago time wherever the server runs, so a note
+// saved in the evening is not shown under the next day's date.
 function formatDate(timestamp) {
   const date = new Date(timestamp.replace(' ', 'T') + 'Z');
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'America/Chicago'
+  });
 }
 
 /* ---------- Routes ---------- */
@@ -74,7 +89,9 @@ app.get('/', (req, res) => {
 // Search the museum's collection.
 // The search term arrives in the address, for example /search?q=monet
 app.get('/search', async (req, res) => {
-  const query = (req.query.q || '').trim();
+  // Accept the search term only as ordinary text, tidy it and cap its length.
+  const typed = typeof req.query.q === 'string' ? req.query.q : '';
+  const query = typed.trim().slice(0, MAX_QUERY_LENGTH);
 
   // No search term yet: show the empty form and do not call the API.
   if (!query) {
@@ -92,7 +109,7 @@ app.get('/search', async (req, res) => {
       limit: RESULTS_PER_PAGE,
       fields: SEARCH_FIELDS
     });
-    
+
     // Call the external REST API and wait for its answer (at most 10 seconds).
     const response = await fetch(`${API_BASE}/artworks/search?${params}`, {
       headers: API_HEADERS,
@@ -105,8 +122,10 @@ app.get('/search', async (req, res) => {
 
     const result = await response.json();
 
-    // Remember the image base address the API just gave us.
-    iiifBase = result.config.iiif_url;
+    // Remember the image base address, if the API gave us one.
+    if (result.config && result.config.iiif_url) {
+      iiifBase = result.config.iiif_url;
+    }
 
     // Keep only what the page needs, under simple names.
     const artworks = result.data.map((artwork) => ({
@@ -181,6 +200,13 @@ app.use((req, res) => {
 // The four parameters tell Express this is an error handler. Keep it last.
 app.use((err, req, res, next) => {
   console.error('Request failed:', err.message);
+
+  // If part of a page has already been sent, we cannot start a new one.
+  // Hand the problem to Express, which closes the connection.
+  if (res.headersSent) {
+    return next(err);
+  }
+
   res.status(err.status || 500).render('error', { title: 'Something went wrong' });
 });
 

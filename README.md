@@ -82,6 +82,8 @@ Use `npm run dev` while developing. It restarts the server when a JavaScript fil
 
 The `hbs` package wraps every page in `views/layout.hbs` automatically.
 
+When a route renders a page, pass named values only, for example `res.render('edit', { note: req.body.note })`. Never pass `req.body` or `req.query` whole.
+
 ### Database
 Saved notes live in `notebook.db`, a SQLite file in the project folder. The app creates the `notes` table at startup if it is missing.
 
