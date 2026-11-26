@@ -73,8 +73,18 @@ Use `npm run dev` while developing. It restarts the server when a JavaScript fil
 | Path | Purpose |
 | --- | --- |
 | `app.js` | Middleware and all routes |
+| `database.js` | Every SQL query, each labeled, as functions the routes call |
+| `notebook.db` | The SQLite database file |
+| `reset-db.js` | Restores the database to three sample notes |
 | `views/layout.hbs` | Shared page frame: head, navigation and footer |
 | `views/` | One template per page, holding only that page's content |
 | `assets/` | Static files, in `css/` and `images/` |
 
 The `hbs` package wraps every page in `views/layout.hbs` automatically.
+
+### Database
+Saved notes live in `notebook.db`, a SQLite file in the project folder. The app creates the `notes` table at startup if it is missing.
+
+- `npm run reset-db` removes every note and restores three sample notes.
+- Saving, editing or deleting a note while testing changes `notebook.db`, so Git lists it as modified. Run `git restore notebook.db` to discard those test changes before committing other work.
+
