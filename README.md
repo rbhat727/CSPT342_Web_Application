@@ -56,3 +56,25 @@ Our target audience is museum visitors who want their trips to the Art Institute
 
 The Art Institute API requires no key; we will add the courtesy AIC-User-Agent header.
 
+## Development
+
+### Requirements
+- Node.js 20.17 or newer
+- npm
+
+### Run the app
+1. `npm install`
+2. `npm start`
+3. Open http://localhost:3000
+
+Use `npm run dev` while developing. It restarts the server when a JavaScript file changes.
+
+### Project layout
+| Path | Purpose |
+| --- | --- |
+| `app.js` | Middleware and all routes |
+| `views/layout.hbs` | Shared page frame: head, navigation and footer |
+| `views/` | One template per page, holding only that page's content |
+| `assets/` | Static files, in `css/` and `images/` |
+
+The `hbs` package wraps every page in `views/layout.hbs` automatically.
