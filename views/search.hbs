@@ -1,0 +1,31 @@
+<h1>Search the collection</h1>
+
+<form class="search-form" action="/search" method="GET" role="search">
+  <label for="q">Search by artist, title or subject</label>
+  <input type="search" id="q" name="q" value="{{query}}" required>
+  <button type="submit">Search</button>
+</form>
+
+{{#if apiError}}
+  <p role="alert">The museum's search isn't responding right now. Please try again in a moment.</p>
+{{/if}}
+
+{{#if noResults}}
+  <p>No artworks matched "{{query}}". Try a different word.</p>
+{{/if}}
+
+{{#if artworks.length}}
+  <h2>Results for "{{query}}"</h2>
+
+  <ul class="results">
+    {{#each artworks}}
+      <li class="result">
+        <a href="/artwork/{{this.id}}">
+          <img src="{{this.imageUrl}}" alt="{{this.altText}}" loading="lazy">
+          <span class="result-title">{{this.title}}</span>
+        </a>
+        <p class="result-meta">{{this.artist}}{{#if this.date}}, {{this.date}}{{/if}}</p>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
