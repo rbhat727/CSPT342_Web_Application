@@ -1,47 +1,31 @@
-// The Art Institute of Chicago Gallery Notebook
-// Main application file: configuration, middleware and routes.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}} | The Art Institute of Chicago Gallery Notebook</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-const path = require('path');
-const express = require('express');
+  <header class="site-header">
+    <p class="site-name">The Art Institute of Chicago Gallery Notebook</p>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/search">Search</a></li>
+        <li><a href="/collection">My Notebook</a></li>
+      </ul>
+    </nav>
+  </header>
 
-const app = express();
+  <main id="main">
+    {{{body}}}
+  </main>
 
-// Use the port the host provides (Heroku sets PORT); fall back to 3000 locally.
-const port = process.env.PORT || 3000;
-
-/* ---------- Middleware and configuration ---------- */
-
-// Static files (CSS, images) are served from the assets folder.
-// Example: assets/css/styles.css is available at /css/styles.css
-app.use(express.static(path.join(__dirname, 'assets')));
-
-// View templating engine: Handlebars (hbs). Templates live in the views folder.
-// views/layout.hbs is applied to every page automatically.
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
-// parse application/json
-app.use(express.json());
-
-// For parsing application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
-
-/* ---------- Routes ---------- */
-
-// Home page
-app.get('/', (req, res) => {
-  res.render('home', { title: 'Home' });
-});
-
-/* ---------- Page not found ---------- */
-
-// Runs only when no route above matched. Keep this below every route.
-app.use((req, res) => {
-  res.status(404).render('404', { title: 'Page not found' });
-});
-
-/* ---------- Start the server ---------- */
-
-app.listen(port, () => {
-  console.log(`Gallery Notebook running at http://localhost:${port}`);
-});
+  <footer class="site-footer">
+    <p>A student project by Chicago Art Scribers. Artwork data comes from the Art Institute of Chicago's public API. This site is not affiliated with the museum.</p>
+  </footer>
+</body>
+</html>
