@@ -1,0 +1,20 @@
+<h1>My Notebook</h1>
+
+{{#if notes.length}}
+  <ul class="notes">
+    {{#each notes}}
+      <li class="note">
+        <img src="{{this.imageUrl}}" alt="{{this.altText}}" loading="lazy">
+        <div class="note-body">
+          <h2><a href="/artwork/{{this.artworkId}}">{{this.title}}</a></h2>
+          <p class="note-meta">{{this.artist}}</p>
+          <p class="note-text">{{this.note}}</p>
+          <p class="note-meta">{{this.ratingText}}</p>
+          <p class="note-meta">Saved {{this.savedOn}}</p>
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>Your notebook is empty. <a href="/search">Search the collection</a> to save your first artwork.</p>
+{{/if}}

@@ -121,3 +121,46 @@ nav ul {
   margin: 0.25rem 0 0;
   color: #444444;
 }
+
+
+/* ---------- My Notebook ---------- */
+
+.notes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #cccccc;
+}
+
+.note img {
+  width: 12rem;
+  max-width: 100%;
+  height: auto;
+  align-self: flex-start;
+  background: #e6e6e6;
+}
+
+.note-body {
+  flex: 1 1 16rem;
+}
+
+.note-body h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.note-meta {
+  margin: 0.25rem 0;
+  color: #444444;
+}
+
+.note-text {
+  margin: 0.5rem 0;
+}

@@ -4,6 +4,9 @@
 const path = require('path');
 const express = require('express');
 
+// Our own database functions (see database.js).
+const db = require('./database');
+
 const app = express();
 
 // Use the port the host provides (Heroku sets PORT); fall back to 3000 locally.
@@ -41,14 +44,24 @@ const SEARCH_FIELDS = 'id,title,artist_title,date_display,image_id,thumbnail,is_
 
 const RESULTS_PER_PAGE = 12;
 
+// Base address for artwork images. Every API response includes the current
+// value, so we update this whenever we hear from the API.
+let iiifBase = 'https://www.artic.edu/iiif/2';
+
 // Build the address of an artwork image from its image_id.
-// iiifUrl comes from the "config" part of every API response.
 // Artworks without an image get our placeholder instead.
-function buildImageUrl(iiifUrl, imageId, width) {
+function buildImageUrl(imageId, width) {
   if (!imageId) {
     return '/images/no-image.svg';
   }
-  return `${iiifUrl}/${imageId}/full/${width},/0/default.jpg`;
+  return `${iiifBase}/${imageId}/full/${width},/0/default.jpg`;
+}
+
+// Turn the database's timestamp ("2026-11-26 09:15:00", in UTC)
+// into a readable date such as "November 26, 2026".
+function formatDate(timestamp) {
+  const date = new Date(timestamp.replace(' ', 'T') + 'Z');
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 /* ---------- Routes ---------- */
@@ -87,13 +100,16 @@ app.get('/search', async (req, res) => {
 
     const result = await response.json();
 
+    // Remember the image base address the API just gave us.
+    iiifBase = result.config.iiif_url;
+
     // Keep only what the page needs, under simple names.
     const artworks = result.data.map((artwork) => ({
       id: artwork.id,
       title: artwork.title,
       artist: artwork.artist_title || 'Artist unknown',
       date: artwork.date_display,
-      imageUrl: buildImageUrl(result.config.iiif_url, artwork.image_id, 400),
+      imageUrl: buildImageUrl(artwork.image_id, 400),
       altText: (artwork.thumbnail && artwork.thumbnail.alt_text) || artwork.title
     }));
 
@@ -110,21 +126,41 @@ app.get('/search', async (req, res) => {
   }
 });
 
+// My Notebook: list every saved note (the RETRIEVE part of CRUD).
+app.get('/collection', async (req, res) => {
+  const rows = await db.getAllNotes();
+
+  // Prepare each database row for display.
+  const notes = rows.map((row) => ({
+    id: row.id,
+    artworkId: row.artwork_id,
+    title: row.title,
+    artist: row.artist || 'Artist unknown',
+    note: row.note,
+    ratingText: row.rating ? `Rating: ${row.rating} of 5` : 'Not rated',
+    savedOn: formatDate(row.created_at),
+    imageUrl: buildImageUrl(row.image_id, 400),
+    altText: `${row.title}, ${row.artist || 'artist unknown'}`
+  }));
+
+  res.render('notebook', { title: 'My Notebook', notes });
+});
+
 /* ---------- Route map (planned) ----------
    Kernel
      GET  /search                 search the Art Institute API, show results (built)
-     GET  /collection             My Notebook: list saved notes
+     GET  /collection             My Notebook: list saved notes (built)
    Module A
      GET  /artwork/:id            one artwork from the API, with a Save form
    Module B
      GET  /api/artworks/:id       return one artwork's API data as JSON
    Module C
-     POST /collection             save a note
+     POST /collection             save a note (uses db.createNote)
    Module D
-     GET  /collection/:id/edit    edit form for one note
-     POST /collection/:id/edit    update the note
+     GET  /collection/:id/edit    edit form for one note (uses db.getNoteById)
+     POST /collection/:id/edit    update the note (uses db.updateNote)
    Module E
-     POST /collection/:id/delete  delete the note
+     POST /collection/:id/delete  delete the note (uses db.deleteNote)
    Add each route above the "Page not found" section. */
 
 /* ---------- Page not found ---------- */
@@ -134,8 +170,18 @@ app.use((req, res) => {
   res.status(404).render('404', { title: 'Page not found' });
 });
 
+/* ---------- Errors ---------- */
+
+// Runs when a route fails, for example when the database cannot be read.
+// The four parameters tell Express this is an error handler. Keep it last.
+app.use((err, req, res, next) => {
+  console.error('Request failed:', err.message);
+  res.status(err.status || 500).render('error', { title: 'Something went wrong' });
+});
+
 /* ---------- Start the server ---------- */
 
 app.listen(port, () => {
   console.log(`Gallery Notebook running at http://localhost:${port}`);
 });
+
