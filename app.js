@@ -33,6 +33,23 @@ app.get('/', (req, res) => {
   res.render('home', { title: 'Home' });
 });
 
+/* ---------- Route map (planned) ----------
+   Kernel
+     GET  /search                 search the Art Institute API, show results
+     GET  /collection             My Notebook: list saved notes
+   Module A
+     GET  /artwork/:id            one artwork from the API, with a Save form
+   Module B
+     GET  /api/artworks/:id       return one artwork's API data as JSON
+   Module C
+     POST /collection             save a note
+   Module D
+     GET  /collection/:id/edit    edit form for one note
+     POST /collection/:id/edit    update the note
+   Module E
+     POST /collection/:id/delete  delete the note
+   Add each route above the "Page not found" section. */
+   
 /* ---------- Page not found ---------- */
 
 // Runs only when no route above matched. Keep this below every route.
