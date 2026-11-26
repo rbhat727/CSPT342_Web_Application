@@ -67,3 +67,57 @@ nav ul {
   font-size: 0.9rem;
   color: #444444;
 }
+
+
+/* ---------- Search form and results ---------- */
+
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-form label {
+  flex-basis: 100%;
+  font-weight: 600;
+}
+
+.search-form input {
+  flex: 1 1 16rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.search-form button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #e6e6e6;
+}
+
+.result-title {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.result-meta {
+  margin: 0.25rem 0 0;
+  color: #444444;
+}
