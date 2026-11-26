@@ -82,12 +82,17 @@ app.get('/search', async (req, res) => {
   }
 
   try {
+    // "q" ranks artworks by relevance, but on its own it never returns an
+    // empty list: when nothing matches, the museum's best-known works come
+    // back instead. The second parameter keeps only artworks that really
+    // contain the search words, so a search with no match returns nothing.
     const params = new URLSearchParams({
       q: query,
+      'query[simple_query_string][query]': query,
       limit: RESULTS_PER_PAGE,
       fields: SEARCH_FIELDS
     });
-
+    
     // Call the external REST API and wait for its answer (at most 10 seconds).
     const response = await fetch(`${API_BASE}/artworks/search?${params}`, {
       headers: API_HEADERS,
