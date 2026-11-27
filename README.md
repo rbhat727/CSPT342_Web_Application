@@ -54,7 +54,7 @@ Our target audience is museum visitors who want their trips to the Art Institute
 | API testing | Hoppscotch |
 | Hosting | Heroku |
 
-The Art Institute API requires no key; we will add the courtesy AIC-User-Agent header.
+The Art Institute API requires no key. The app sends the courtesy AIC-User-Agent header with every request.
 
 ## Development
 
