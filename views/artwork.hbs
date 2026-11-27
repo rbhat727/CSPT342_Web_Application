@@ -1,0 +1,46 @@
+{{#if apiError}}
+  <h1>Artwork unavailable</h1>
+
+  <p role="alert">The museum isn't responding right now. Please try again in a moment.</p>
+
+  <p><a href="/search">Return to search</a></p>
+{{else}}
+  <article class="artwork">
+    <h1>{{artwork.title}}</h1>
+
+    {{#if artwork.imageHeight}}
+      <img class="artwork-image" src="{{artwork.imageUrl}}" alt="{{artwork.altText}}" width="{{artwork.imageWidth}}" height="{{artwork.imageHeight}}">
+    {{else}}
+      <img class="artwork-image" src="{{artwork.imageUrl}}" alt="{{artwork.altText}}">
+    {{/if}}
+
+    <dl class="artwork-details">
+      <dt>Artist</dt>
+      <dd>
+        {{#each artwork.artistLines}}
+          <span class="detail-line">{{this}}</span>
+        {{/each}}
+      </dd>
+
+      {{#if artwork.date}}
+        <dt>Date</dt>
+        <dd>{{artwork.date}}</dd>
+      {{/if}}
+
+      {{#if artwork.medium}}
+        <dt>Medium</dt>
+        <dd>{{artwork.medium}}</dd>
+      {{/if}}
+
+      {{#if artwork.creditLine}}
+        <dt>Credit line</dt>
+        <dd>{{artwork.creditLine}}</dd>
+      {{/if}}
+
+      <dt>At the museum</dt>
+      <dd>{{artwork.onViewText}}</dd>
+    </dl>
+
+    <p><a href="{{artwork.museumUrl}}">View this work on the Art Institute's website</a></p>
+  </article>
+{{/if}}

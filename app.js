@@ -47,7 +47,16 @@ const API_HEADERS = {
 // A search returns very few fields unless we name the ones we want.
 const SEARCH_FIELDS = 'id,title,artist_title,date_display,image_id,thumbnail';
 
+// Fields we ask for when fetching one artwork for its own page.
+const ARTWORK_FIELDS = 'id,title,artist_display,artist_title,date_display,medium_display,credit_line,image_id,thumbnail,is_on_view,gallery_title';
+
+// The museum's own website, used to link to an artwork's official page.
+const MUSEUM_SITE = 'https://www.artic.edu';
+
 const RESULTS_PER_PAGE = 12;
+
+// Widest image shown on an artwork page. The museum prefers this size.
+const DETAIL_IMAGE_WIDTH = 843;
 
 // Longest search we accept. The search box has the same limit.
 const MAX_QUERY_LENGTH = 100;
@@ -55,6 +64,13 @@ const MAX_QUERY_LENGTH = 100;
 // Base address for artwork images. Every API response includes the current
 // value, so we update this whenever we hear from the API.
 let iiifBase = 'https://www.artic.edu/iiif/2';
+
+// Remember the image base address whenever a museum response includes one.
+function rememberImageBase(result) {
+  if (result.config && result.config.iiif_url) {
+    iiifBase = result.config.iiif_url;
+  }
+}
 
 // Build the address of an artwork image from its image_id.
 // Artworks without an image get our placeholder instead.
@@ -77,6 +93,42 @@ function formatDate(timestamp) {
     day: 'numeric',
     timeZone: 'America/Chicago'
   });
+}
+
+// An artwork id in an address must be a whole number of 1 to 9 digits.
+function isValidArtworkId(id) {
+  return /^[0-9]{1,9}$/.test(id);
+}
+
+// Fetch one artwork from the museum's API.
+// Resolves with the artwork's data, or with null when the museum has no
+// artwork with that id. Throws an error when the museum cannot be reached
+// or answers with a failure, so the calling route can show a message.
+async function fetchArtwork(id) {
+  const params = new URLSearchParams({ fields: ARTWORK_FIELDS });
+
+  const response = await fetch(`${API_BASE}/artworks/${id}?${params}`, {
+    headers: API_HEADERS,
+    signal: AbortSignal.timeout(10000)
+  });
+
+  // The museum answers 404 for an id it does not know.
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(`Art Institute API answered with status ${response.status}`);
+  }
+
+  const result = await response.json();
+  rememberImageBase(result);
+  return result.data;
+}
+
+// Show the "Page not found" page. Used by several routes.
+function renderNotFound(res) {
+  res.status(404).render('404', { title: 'Page not found' });
 }
 
 /* ---------- Routes ---------- */
@@ -122,10 +174,7 @@ app.get('/search', async (req, res) => {
 
     const result = await response.json();
 
-    // Remember the image base address, if the API gave us one.
-    if (result.config && result.config.iiif_url) {
-      iiifBase = result.config.iiif_url;
-    }
+    rememberImageBase(result);
 
     // Keep only what the page needs, under simple names.
     const artworks = result.data.map((artwork) => ({
@@ -137,10 +186,22 @@ app.get('/search', async (req, res) => {
       altText: (artwork.thumbnail && artwork.thumbnail.alt_text) || artwork.title
     }));
 
+    // Say how many works matched, for example "Showing 12 of 155 works".
+    const total = result.pagination ? result.pagination.total : null;
+    let countText = '';
+    if (Number.isInteger(total) && total > artworks.length) {
+      countText = `Showing ${artworks.length} of ${total.toLocaleString('en-US')} works`;
+    } else if (artworks.length === 1) {
+      countText = '1 work found';
+    } else if (artworks.length > 1) {
+      countText = `${artworks.length} works found`;
+    }
+
     res.render('search', {
       title: `Search: ${query}`,
       query,
       artworks,
+      countText,
       noResults: artworks.length === 0
     });
   } catch (error) {
@@ -148,6 +209,67 @@ app.get('/search', async (req, res) => {
     console.error('Search failed:', error.message);
     res.status(502).render('search', { title: 'Search', query, apiError: true });
   }
+});
+
+// Artwork page: one work from the museum, chosen by the id in the address.
+// Example: /artwork/111628
+app.get('/artwork/:id', async (req, res) => {
+  const id = req.params.id;
+
+  // Anything that is not a plain number cannot be an artwork.
+  if (!isValidArtworkId(id)) {
+    return renderNotFound(res);
+  }
+
+  let artwork;
+  try {
+    artwork = await fetchArtwork(id);
+  } catch (error) {
+    // The API was unreachable, too slow, or returned an error.
+    console.error('Artwork lookup failed:', error.message);
+    return res.status(502).render('artwork', { title: 'Artwork unavailable', apiError: true });
+  }
+
+  // The museum has no artwork with this id.
+  if (!artwork) {
+    return renderNotFound(res);
+  }
+
+  // Ask for an image 843 pixels wide, or the original's width if that is
+  // smaller. Telling the browser the size in advance stops the page from
+  // jumping when the image arrives.
+  const original = artwork.thumbnail || {};
+  let imageWidth = DETAIL_IMAGE_WIDTH;
+  let imageHeight = null;
+  if (original.width && original.height) {
+    imageWidth = Math.min(DETAIL_IMAGE_WIDTH, original.width);
+    imageHeight = Math.round((imageWidth * original.height) / original.width);
+  }
+
+  // Where the work is in the building, if it is on display.
+  let onViewText = 'Not currently on view';
+  if (artwork.is_on_view) {
+    onViewText = artwork.gallery_title ? `On view in ${artwork.gallery_title}` : 'On view';
+  }
+
+  res.render('artwork', {
+    title: artwork.title,
+    artwork: {
+      id: artwork.id,
+      title: artwork.title,
+      // The artist text can run over several lines (name, then nationality and dates).
+      artistLines: (artwork.artist_display || 'Artist unknown').split('\n'),
+      date: artwork.date_display,
+      medium: artwork.medium_display,
+      creditLine: artwork.credit_line,
+      onViewText,
+      imageUrl: buildImageUrl(artwork.image_id, imageWidth),
+      imageWidth,
+      imageHeight,
+      altText: original.alt_text || artwork.title,
+      museumUrl: `${MUSEUM_SITE}/artworks/${artwork.id}`
+    }
+  });
 });
 
 // My Notebook: list every saved note (the RETRIEVE part of CRUD).
@@ -175,11 +297,12 @@ app.get('/collection', async (req, res) => {
      GET  /search                 search the Art Institute API, show results (built)
      GET  /collection             My Notebook: list saved notes (built)
    Module A
-     GET  /artwork/:id            one artwork from the API, with a Save form
+     GET  /artwork/:id            one artwork from the API (built)
    Module B
      GET  /api/artworks/:id       return one artwork's API data as JSON
    Module C
-     POST /collection             save a note (uses db.createNote)
+     POST /collection             save a note (uses db.createNote);
+                                  also adds the Save form to the artwork page
    Module D
      GET  /collection/:id/edit    edit form for one note (uses db.getNoteById)
      POST /collection/:id/edit    update the note (uses db.updateNote)
@@ -191,7 +314,7 @@ app.get('/collection', async (req, res) => {
 
 // Runs only when no route above matched. Keep this below every route.
 app.use((req, res) => {
-  res.status(404).render('404', { title: 'Page not found' });
+  renderNotFound(res);
 });
 
 /* ---------- Errors ---------- */
@@ -215,4 +338,3 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Gallery Notebook running at http://localhost:${port}`);
 });
-

@@ -164,3 +164,37 @@ nav ul {
 .note-text {
   margin: 0.5rem 0;
 }
+
+
+/* ---------- Search result count ---------- */
+
+.result-count {
+  margin: 0 0 1rem;
+  color: #444444;
+}
+
+/* ---------- Artwork page ---------- */
+
+.artwork-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background: #e6e6e6;
+}
+
+.artwork-details {
+  margin: 1.5rem 0;
+}
+
+.artwork-details dt {
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+
+.artwork-details dd {
+  margin: 0;
+}
+
+.detail-line {
+  display: block;
+}
