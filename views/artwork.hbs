@@ -42,5 +42,43 @@
     </dl>
 
     <p><a href="{{artwork.museumUrl}}">View this work on the Art Institute's website</a></p>
+
+    <details class="artwork-data" id="artwork-data">
+      <summary>Museum data for this work (JSON)</summary>
+
+      <p>This is the record our app receives from the Art Institute's API. You can also <a href="/api/artworks/{{artwork.id}}">open the raw JSON</a>, which shows the data alone; use your browser's Back button to return.</p>
+
+      <pre id="artwork-data-output" tabindex="0" aria-label="Artwork data in JSON">Open this section to load the data.</pre>
+    </details>
   </article>
+
+  <script>
+    // When the section above is opened for the first time, ask our own JSON
+    // route for this artwork's record and show it as indented text.
+    (function () {
+      var section = document.getElementById('artwork-data');
+      var output = document.getElementById('artwork-data-output');
+      var loaded = false;
+
+      section.addEventListener('toggle', function () {
+        if (!section.open || loaded) {
+          return;
+        }
+        loaded = true;
+        output.textContent = 'Loading...';
+
+        fetch('/api/artworks/{{artwork.id}}')
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (record) {
+            output.textContent = JSON.stringify(record, null, 2);
+          })
+          .catch(function () {
+            loaded = false;
+            output.textContent = 'The data could not be loaded. Close this section and open it again to retry.';
+          });
+      });
+    })();
+  </script>
 {{/if}}

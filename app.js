@@ -34,6 +34,9 @@ app.use(express.json());
 // For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+// When a route answers with JSON, indent it so that people can read it.
+app.set('json spaces', 2);
+
 /* ---------- Art Institute of Chicago API settings ---------- */
 
 // Base address of the museum's public API. No key or account is needed.
@@ -93,6 +96,19 @@ function formatDate(timestamp) {
     day: 'numeric',
     timeZone: 'America/Chicago'
   });
+}
+
+// Work out the size of the large image for one artwork: 843 pixels wide, or
+// the original's width if that is smaller. The height keeps the same shape.
+// Used by the artwork page and by the JSON route.
+function detailImageSize(artwork) {
+  const original = artwork.thumbnail || {};
+  if (original.width && original.height) {
+    const width = Math.min(DETAIL_IMAGE_WIDTH, original.width);
+    const height = Math.round((width * original.height) / original.width);
+    return { width, height };
+  }
+  return { width: DETAIL_IMAGE_WIDTH, height: null };
 }
 
 // An artwork id in an address must be a whole number of 1 to 9 digits.
@@ -235,16 +251,10 @@ app.get('/artwork/:id', async (req, res) => {
     return renderNotFound(res);
   }
 
-  // Ask for an image 843 pixels wide, or the original's width if that is
-  // smaller. Telling the browser the size in advance stops the page from
+  // Telling the browser the image's size in advance stops the page from
   // jumping when the image arrives.
+  const imageSize = detailImageSize(artwork);
   const original = artwork.thumbnail || {};
-  let imageWidth = DETAIL_IMAGE_WIDTH;
-  let imageHeight = null;
-  if (original.width && original.height) {
-    imageWidth = Math.min(DETAIL_IMAGE_WIDTH, original.width);
-    imageHeight = Math.round((imageWidth * original.height) / original.width);
-  }
 
   // Where the work is in the building, if it is on display.
   let onViewText = 'Not currently on view';
@@ -263,13 +273,45 @@ app.get('/artwork/:id', async (req, res) => {
       medium: artwork.medium_display,
       creditLine: artwork.credit_line,
       onViewText,
-      imageUrl: buildImageUrl(artwork.image_id, imageWidth),
-      imageWidth,
-      imageHeight,
+      imageUrl: buildImageUrl(artwork.image_id, imageSize.width),
+      imageWidth: imageSize.width,
+      imageHeight: imageSize.height,
       altText: original.alt_text || artwork.title,
       museumUrl: `${MUSEUM_SITE}/artworks/${artwork.id}`
     }
   });
+});
+
+// Artwork data as JSON: the museum's record for one work, sent as data
+// rather than as a page. Example: /api/artworks/111628
+app.get('/api/artworks/:id', async (req, res) => {
+  const id = req.params.id;
+
+  // This route always answers in JSON, including when something is wrong.
+  if (!isValidArtworkId(id)) {
+    return res.status(404).json({ error: 'Artwork not found' });
+  }
+
+  let artwork;
+  try {
+    artwork = await fetchArtwork(id);
+  } catch (error) {
+    // The API was unreachable, too slow, or returned an error.
+    console.error('Artwork lookup failed:', error.message);
+    return res.status(502).json({ error: 'The museum is not responding. Please try again in a moment.' });
+  }
+
+  if (!artwork) {
+    return res.status(404).json({ error: 'Artwork not found' });
+  }
+
+  // Send the museum's record as it arrived, with its own field names,
+  // and add one field of ours: the address of the image (or null if none).
+  artwork.image_url = artwork.image_id
+    ? buildImageUrl(artwork.image_id, detailImageSize(artwork).width)
+    : null;
+
+  res.json(artwork);
 });
 
 // My Notebook: list every saved note (the RETRIEVE part of CRUD).
@@ -299,7 +341,7 @@ app.get('/collection', async (req, res) => {
    Module A
      GET  /artwork/:id            one artwork from the API (built)
    Module B
-     GET  /api/artworks/:id       return one artwork's API data as JSON
+     GET  /api/artworks/:id       return one artwork's API data as JSON (built)
    Module C
      POST /collection             save a note (uses db.createNote);
                                   also adds the Save form to the artwork page
